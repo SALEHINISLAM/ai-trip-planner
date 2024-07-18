@@ -3,18 +3,24 @@ import PropTypes from "prop-types";
 import GooglePlacesAutocomplete from "react-google-places-autocomplete";
 import axios from "axios";
 import { Input } from "@/components/ui/input";
-import { AiPrompt, selectBudgetOptions, SelectTravelsList } from "@/Constants/Options";
+import {
+  AiPrompt,
+  selectBudgetOptions,
+  SelectTravelsList,
+} from "@/Constants/Options";
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/components/ui/use-toast"
+import { useToast } from "@/components/ui/use-toast";
 import { chatSession } from "@/Service/AIModel";
-
+import { Skeleton } from "@/components/ui/skeleton";
 
 const CreateTrip = (props) => {
+  const [loader, setLoader] = useState(false);
   const [place, setPlace] = useState();
   const [query, setQuery] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [formData, setFormData] = useState([]);
-  const { toast } = useToast()
+  const { toast } = useToast();
+  const [aiJson, setAiJson]=useState();
   const handleInputChange = (name, value) => {
     setFormData({
       ...formData,
@@ -26,23 +32,25 @@ const CreateTrip = (props) => {
   }, [formData]);
 
   const OngenerateTrip = async () => {
-  const days=document.getElementById('days').value;
-  console.log(days);
+    setLoader(!loader);
+    const days = document.getElementById("days").value;
+    console.log(days);
     if (days > 5) {
       toast({
         title: "More than 5 days is not allowed",
         description: "Please select less than or equal to 5 days...",
-      })
+      });
       return;
     }
-    const FinalPrompt=AiPrompt
-    .replace('Jhenaidah', place)
-    .replace('3',days)
-    .replace('Cheap',formData?.budget)
-    .replace('Couple',formData?.traveler)
-    .replace('3',days)
+    const FinalPrompt = AiPrompt.replace("Jhenaidah", place)
+      .replace("3", days)
+      .replace("Cheap", formData?.budget)
+      .replace("Couple", formData?.traveler)
+      .replace("3", days);
     //console.log(FinalPrompt);
-    const result=await chatSession.sendMessage(FinalPrompt);
+    const result = await chatSession.sendMessage(FinalPrompt);
+    const aiText=await axios(result?.response?.text);
+    setAiJson(aiText.data)
     console.log(result?.response?.text());
   };
   const fetchSuggestions = async (q) => {
@@ -81,8 +89,6 @@ const CreateTrip = (props) => {
     //document.getElementById("destination").classList.add("hidden");
   };
 
-
-  
   return (
     <div className="container mx-auto">
       <h2 className="text-5xl font-bold mt-8">
@@ -136,8 +142,11 @@ const CreateTrip = (props) => {
               <div
                 key={index}
                 className={`bg-gray-200 rounded-xl p-4 hover:cursor-pointer hover:shadow-xl 
-                ${formData?.budget==item.title && 'shadow-lg border-2 border-black'}`}
-                onClick={()=>handleInputChange('budget',item.title)}
+                ${
+                  formData?.budget == item.title &&
+                  "shadow-lg border-2 border-black"
+                }`}
+                onClick={() => handleInputChange("budget", item.title)}
               >
                 <figure className="p-6 flex justify-center">
                   <img src={item.icon} alt="" className="w-10" />
@@ -156,14 +165,16 @@ const CreateTrip = (props) => {
           <h2 className="text-xl my-3 font-medium">
             Who do you plan on traveling with on your next adventure ?
           </h2>
-          <div 
-          className="grid grid-cols-1 md:grid-cols-3 justify-center mx-auto items-center gap-3">
+          <div className="grid grid-cols-1 md:grid-cols-3 justify-center mx-auto items-center gap-3">
             {SelectTravelsList.map((item, index) => (
               <div
                 className={`bg-gray-200 rounded-xl p-4 hover:cursor-pointer hover:shadow-xl 
-                ${formData?.traveler==item.people && 'shadow-lg border-2 border-black'}`}
+                ${
+                  formData?.traveler == item.people &&
+                  "shadow-lg border-2 border-black"
+                }`}
                 key={index}
-                onClick={()=>handleInputChange('traveler',item.people)}
+                onClick={() => handleInputChange("traveler", item.people)}
               >
                 <figure className="p-6 flex justify-center">
                   <img src={item.icon} alt="" className="w-10" />
@@ -181,6 +192,22 @@ const CreateTrip = (props) => {
       </div>
       <div className="mt-8 flex justify-center mb-10">
         <Button onClick={() => OngenerateTrip()}>Generate Trip</Button>
+      </div>
+      <div
+        className={`justify-center mx-auto w-full ${
+          loader ? "flex" : "hidden"
+        } `}
+      >
+        <div className="flex flex-col space-y-3">
+          <Skeleton className="h-[200px] w-[300px] rounded-xl" />
+          <div className="space-y-2">
+            <Skeleton className="h-4 w-[250px]" />
+            <Skeleton className="h-4 w-[200px]" />
+          </div>
+        </div>
+      </div>
+      <div className="">
+
       </div>
     </div>
   );
