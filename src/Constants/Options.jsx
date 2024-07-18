@@ -3,28 +3,28 @@ export const SelectTravelsList=[
         id:1,
         title:'Just Me',
         desc:'A sole travels in exploration',
-        icon: '/public/single-trip.png',
+        icon: '/single-trip.png',
         people: '1'
     },
     {
         id:2,
         title:'A Couple',
         desc:'Two travels in tandem',
-        icon: '/public/couple-trip.png',
+        icon: '/couple-trip.png',
         people: '2 People'
     },
     {
         id:3,
         title:'Family',
         desc:'A group of fun loving adv',
-        icon: '/public/Family-trip.png',
+        icon: '/Family-trip.png',
         people: '3 to 5 People'
     },
     {
         id:4,
         title:'Friends',
         desc:'A bunch of thrilled-seeks',
-        icon: '/public/friend-trip.png',
+        icon: '/friend-trip.png',
         people: '5 to 10 People'
     },
 ]

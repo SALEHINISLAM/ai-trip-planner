@@ -5,15 +5,15 @@ import axios from "axios";
 import { Input } from "@/components/ui/input";
 import { selectBudgetOptions, SelectTravelsList } from "@/Constants/Options";
 import { Button } from "@/components/ui/button";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { useToast } from "@/components/ui/use-toast"
+
 
 const CreateTrip = (props) => {
   const [place, setPlace] = useState();
   const [query, setQuery] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [formData, setFormData] = useState([]);
-
+  const { toast } = useToast()
   const handleInputChange = (name, value) => {
     setFormData({
       ...formData,
@@ -27,7 +27,10 @@ const CreateTrip = (props) => {
   const days=document.getElementById('days').value;
   console.log(days);
     if (days > 5) {
-      toast.error("More than 5 days of trip is not possible!!!");
+      toast({
+        title: "More than 5 days is not allowed",
+        description: "Please select less than or equal to 5 days...",
+      })
       return;
     }
     console.log(formData, place, days);
