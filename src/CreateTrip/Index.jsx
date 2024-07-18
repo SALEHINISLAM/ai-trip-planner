@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { AiPrompt, selectBudgetOptions, SelectTravelsList } from "@/Constants/Options";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast"
+import { chatSession } from "@/Service/AIModel";
 
 
 const CreateTrip = (props) => {
@@ -24,7 +25,7 @@ const CreateTrip = (props) => {
     console.log(formData);
   }, [formData]);
 
-  const OngenerateTrip = () => {
+  const OngenerateTrip = async () => {
   const days=document.getElementById('days').value;
   console.log(days);
     if (days > 5) {
@@ -39,7 +40,10 @@ const CreateTrip = (props) => {
     .replace('3',days)
     .replace('Cheap',formData?.budget)
     .replace('Couple',formData?.traveler)
-    console.log(FinalPrompt);
+    .replace('3',days)
+    //console.log(FinalPrompt);
+    const result=await chatSession.sendMessage(FinalPrompt);
+    console.log(result?.response?.text());
   };
   const fetchSuggestions = async (q) => {
     if (q.length < 3) return;
