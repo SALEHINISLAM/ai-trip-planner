@@ -1,4 +1,4 @@
-export const SelectTravelesList=[
+export const SelectTravelsList=[
     {
         id:1,
         title:'Just Me',
@@ -34,18 +34,18 @@ export const selectBudgetOptions=[
         id:1,
         title: 'Cheap',
         desc: 'Stay conscious of costs',
-        icon: '/public/cheap-price.png'
+        icon: '/cheap-price.png'
     },
     {
         id:2,
         title: 'Moderate',
         desc: 'Keep cost on the average side',
-        icon: '/public/moderate-cost.png'
+        icon: '/moderate-cost.png'
     },
     {
         id:3,
         title: 'Luxury',
         desc: 'Do not worry about cost',
-        icon: '/public/luxury-cost.png'
+        icon: '/luxury-cost.png'
     },
 ]
