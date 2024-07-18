@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Button } from "../ui/button";
+import { Link } from "react-router-dom";
 
 const Hero = (props) => {
   return (
@@ -15,7 +16,9 @@ const Hero = (props) => {
         Your personal trip planner and travel curator, creating custom
         itineraries tailored to your interest and budget.
       </p>
+      <Link to={'/create-trip'}>
       <Button>Get Started - It's Free</Button>
+      </Link>
     </div>
   );
 };
