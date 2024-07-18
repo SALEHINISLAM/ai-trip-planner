@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import GooglePlacesAutocomplete from "react-google-places-autocomplete";
 import axios from "axios";
 import { Input } from "@/components/ui/input";
-import { selectBudgetOptions, SelectTravelsList } from "@/Constants/Options";
+import { AiPrompt, selectBudgetOptions, SelectTravelsList } from "@/Constants/Options";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast"
 
@@ -23,6 +23,7 @@ const CreateTrip = (props) => {
   useEffect(() => {
     console.log(formData);
   }, [formData]);
+
   const OngenerateTrip = () => {
   const days=document.getElementById('days').value;
   console.log(days);
@@ -33,7 +34,12 @@ const CreateTrip = (props) => {
       })
       return;
     }
-    console.log(formData, place, days);
+    const FinalPrompt=AiPrompt
+    .replace('Jhenaidah', place)
+    .replace('3',days)
+    .replace('Cheap',formData?.budget)
+    .replace('Couple',formData?.traveler)
+    console.log(FinalPrompt);
   };
   const fetchSuggestions = async (q) => {
     if (q.length < 3) return;
@@ -67,9 +73,10 @@ const CreateTrip = (props) => {
   const handleSuggestionOnClick = (suggestion) => {
     setQuery(suggestion.address);
     setSuggestions([]);
-    setPlace(suggestion.address);
+    setPlace(suggestion.district);
     //document.getElementById("destination").classList.add("hidden");
   };
+
 
   
   return (

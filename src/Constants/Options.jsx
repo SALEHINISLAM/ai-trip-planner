@@ -49,3 +49,13 @@ export const selectBudgetOptions=[
         icon: '/luxury-cost.png'
     },
 ]
+
+export const AiPrompt=`Generate Travel Plan for 
+Location: Jhenaidah, Bangladesh for 
+3 Days for Couple with a Cheap Budget , 
+Give me a Hotels options list with Hotel Name, 
+Hotel Address, Price, Hotel Image Url, Geo Coordinates, 
+Ticket Pricing, Ratings, description, 
+suggest itinerary with place name, place details, 
+place image url, time travel each of location for 3 
+days with each day plan with best time to visit in json format`
