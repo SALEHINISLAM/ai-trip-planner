@@ -1,15 +1,37 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import GooglePlacesAutocomplete from "react-google-places-autocomplete";
 import axios from "axios";
 import { Input } from "@/components/ui/input";
 import { selectBudgetOptions, SelectTravelsList } from "@/Constants/Options";
+import { Button } from "@/components/ui/button";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const CreateTrip = (props) => {
   const [place, setPlace] = useState();
   const [query, setQuery] = useState("");
   const [suggestions, setSuggestions] = useState([]);
+  const [formData, setFormData] = useState([]);
 
+  const handleInputChange = (name, value) => {
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+  useEffect(() => {
+    console.log(formData);
+  }, [formData]);
+  const OngenerateTrip = () => {
+  const days=document.getElementById('days').value;
+  console.log(days);
+    if (days > 5) {
+      toast.error("More than 5 days of trip is not possible!!!");
+      return;
+    }
+    console.log(formData, place, days);
+  };
   const fetchSuggestions = async (q) => {
     if (q.length < 3) return;
     //query must larger than 3 letter
@@ -42,8 +64,11 @@ const CreateTrip = (props) => {
   const handleSuggestionOnClick = (suggestion) => {
     setQuery(suggestion.address);
     setSuggestions([]);
-    document.getElementById("destination").classList.add("hidden");
+    setPlace(suggestion.address);
+    //document.getElementById("destination").classList.add("hidden");
   };
+
+  
   return (
     <div className="container mx-auto">
       <h2 className="text-5xl font-bold mt-8">
@@ -83,7 +108,7 @@ const CreateTrip = (props) => {
           <h2 className="text-xl my-3 font-medium">
             How many days are you planning your trip?
           </h2>
-          <Input placeholder="Example: 3days" type="number" />
+          <Input placeholder="Example: 3days" type="number" id="days" />
         </div>
 
         <div className="">
@@ -96,7 +121,9 @@ const CreateTrip = (props) => {
             {selectBudgetOptions.map((item, index) => (
               <div
                 key={index}
-                className="bg-gray-200 rounded-xl p-4 hover:cursor-pointer hover:shadow-xl"
+                className={`bg-gray-200 rounded-xl p-4 hover:cursor-pointer hover:shadow-xl 
+                ${formData?.budget==item.title && 'shadow-lg border-2 border-black'}`}
+                onClick={()=>handleInputChange('budget',item.title)}
               >
                 <figure className="p-6 flex justify-center">
                   <img src={item.icon} alt="" className="w-10" />
@@ -115,11 +142,14 @@ const CreateTrip = (props) => {
           <h2 className="text-xl my-3 font-medium">
             Who do you plan on traveling with on your next adventure ?
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 justify-center mx-auto items-center gap-3">
+          <div 
+          className="grid grid-cols-1 md:grid-cols-3 justify-center mx-auto items-center gap-3">
             {SelectTravelsList.map((item, index) => (
               <div
-                className="bg-gray-200 rounded-xl p-4 hover:cursor-pointer hover:shadow-xl"
+                className={`bg-gray-200 rounded-xl p-4 hover:cursor-pointer hover:shadow-xl 
+                ${formData?.traveler==item.people && 'shadow-lg border-2 border-black'}`}
                 key={index}
+                onClick={()=>handleInputChange('traveler',item.people)}
               >
                 <figure className="p-6 flex justify-center">
                   <img src={item.icon} alt="" className="w-10" />
@@ -134,6 +164,9 @@ const CreateTrip = (props) => {
             ))}
           </div>
         </div>
+      </div>
+      <div className="mt-8 flex justify-center mb-10">
+        <Button onClick={() => OngenerateTrip()}>Generate Trip</Button>
       </div>
     </div>
   );
