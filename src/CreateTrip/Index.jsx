@@ -49,9 +49,9 @@ const CreateTrip = (props) => {
       .replace("3", days);
     //console.log(FinalPrompt);
     const result = await chatSession.sendMessage(FinalPrompt);
-    const aiText=await axios(result?.response?.text);
+    const aiText=await axios(result?.response?.text());
     setAiJson(aiText.data)
-    console.log(result?.response?.text());
+    console.log(aiText.data);
   };
   const fetchSuggestions = async (q) => {
     if (q.length < 3) return;
